@@ -1,4 +1,6 @@
+USE campeonato;
 
+------------–––––------------–––––------------–––––------------–––––------------–––––------------–––––
 -- PROCEDURE PARA SORTEAR OS GRUPOS 
 -- SAO PAULO, CORINTHIANS, PALMEIRAS E SANTOS NUNCA FICAM NO MESMO GRUPO;
 CREATE PROCEDURE sortearGrupos
@@ -11,7 +13,7 @@ BEGIN
 	SELECT sigla, codigoTime  FROM
 		(
 			SELECT ROW_NUMBER() OVER (ORDER BY NEWID()) AS cont, codigoTime, nome FROM times
-			WHERE codigoTime NOT IN (1, 2, 3, 4)
+			WHERE codigoTime NOT IN (16, 10, 13, 3)
 		) tbl1 
 		INNER JOIN	
 		(
@@ -25,7 +27,7 @@ BEGIN
 	SELECT sigla, codigoTime FROM
 		(
 			SELECT ROW_NUMBER() OVER (ORDER BY NEWID()) AS cont, codigoTime, nome FROM times
-			WHERE codigoTime IN (1, 2, 3, 4)
+			WHERE codigoTime IN (16, 10, 13, 3)
 		) tbl1 
 		INNER JOIN	
 		(
@@ -40,8 +42,9 @@ BEGIN
 
 END
 
-EXEC sortearGrupos 
+EXEC sortearGrupos;
 
+------------–––––------------–––––------------–––––------------–––––------------–––––------------–––––
 -- VIEW PARA SORTEAR TODOS OS JOGOS POSSIVEIS
 -- 96 JOGOS ONDE
 -- 1) TIMES DO MESMO GRUPO NÃO SE ENFRENTAM
@@ -69,8 +72,8 @@ SELECT tg1.codigoTime as codigoCasa, tg1.nome as timeCasa, tg1.codigoGrupo as gr
 SELECT * FROM todosOsJogosPossiveis tojp;
 
 
+------------–––––------------–––––------------–––––------------–––––------------–––––------------–––––
 -- PROCEDURE PARA GERAR A DATA DA PROXIMA QUARTA FEIRA OU DOMINGO
-
 DROP PROCEDURE gerarDataValida 
 
 CREATE PROCEDURE gerarDataValida
@@ -106,6 +109,4 @@ BEGIN
 		END
 	SET @saida = @novaData;
 	SET @info = @nomeDoDia; 
-
-
 END

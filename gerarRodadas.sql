@@ -1,15 +1,15 @@
 USE campeonato;
 
-
+------------–––––------------–––––------------–––––------------–––––------------–––––------------–––––
 -----CHAMAR ESSA PROCEDURE
  --ENVIAR UMA DATA A PARTIR DESSA DATA ELA GERA AS 4 PROXIMAS RODADAS
  --GERA 4 JOGOS DE 4 RODADAS 
  --ENVIAR A SIGLA DOS GRUPOS DE FORMA QUE ELES FAÇAM UM CROSSJOIN
  --EX 
 	-- PRIMEIRAS 4 RODADAS VEM DO (A - B) (C - D)
-								  (A - C) (B - D)
-								  (A - D) (B - C)
-								  96 jogos com data e precisa agora fazer o saldo de gols?
+	--							  (A - C) (B - D)
+	--							  (A - D) (B - C)
+
 
 CREATE PROCEDURE gerarQuatroJogosDeQuatroRodadas
 (
@@ -41,43 +41,47 @@ BEGIN
 	DECLARE @rodada1 as date;
 	EXEC gerarDataValida @data, @rodada1  output;
 
-	INSERT INTO exemplo(timeCasa, grupoCasa, timeFora, grupoFora, data)
-	SELECT timeCasa, grupoCasa, timeFora, grupoFora, @rodada1 AS data FROM #temporaria 
+	INSERT INTO jogos(timeCasa, grupoCasa, golsCasa, timeFora, grupoFora, golsFora, data)
+	SELECT timeCasa, grupoCasa, ABS(CHECKSUM(NEWID()) % 5) AS golsCasa, timeFora, grupoFora, ABS(CHECKSUM(NEWID()) % 5) AS golsFora, @rodada1 AS data FROM #temporaria 
 	WHERE codigo IN (1, 8, 10, 15);
 
 	DECLARE @rodada2 as date;
 	SET @rodada1 = DATEADD(day, 1, @rodada1);
 	EXEC gerarDataValida @rodada1, @rodada2 output;
 
-	INSERT INTO exemplo(timeCasa, grupoCasa, timeFora, grupoFora, data)
-	SELECT timeCasa, grupoCasa, timeFora, grupoFora, @rodada2 AS data FROM #temporaria
+	INSERT INTO jogos(timeCasa, grupoCasa, golsCasa, timeFora, grupoFora, golsFora, data)
+	SELECT timeCasa, grupoCasa, ABS(CHECKSUM(NEWID()) % 5) AS golsCasa, timeFora, grupoFora, ABS(CHECKSUM(NEWID()) % 5) AS golsFora, @rodada2 AS data FROM #temporaria 
 	WHERE codigo IN (2, 7, 9, 16);
 
 	DECLARE @rodada3 as date;
 	SET @rodada2 = DATEADD(day, 1, @rodada2);
 	EXEC gerarDataValida @rodada2, @rodada3 output;
 
-	INSERT INTO exemplo(timeCasa, grupoCasa, timeFora, grupoFora, data)
-	SELECT timeCasa, grupoCasa, timeFora, grupoFora, @rodada3 AS data FROM #temporaria
+	INSERT INTO jogos(timeCasa, grupoCasa, golsCasa, timeFora, grupoFora, golsFora, data)
+	SELECT timeCasa, grupoCasa, ABS(CHECKSUM(NEWID()) % 5) AS golsCasa, timeFora, grupoFora, ABS(CHECKSUM(NEWID()) % 5) AS golsFora, @rodada3 AS data FROM #temporaria 
 	WHERE codigo IN (3, 6, 12, 13);
 
 	DECLARE @rodada4 as date;
 	SET @rodada3 = DATEADD(day, 1, @rodada3);
 	EXEC gerarDataValida @rodada3, @rodada4 output;
 
-	INSERT INTO exemplo(timeCasa, grupoCasa, timeFora, grupoFora, data)
-	SELECT timeCasa, grupoCasa, timeFora, grupoFora, @rodada4 AS data FROM #temporaria
+	INSERT INTO jogos(timeCasa, grupoCasa, golsCasa, timeFora, grupoFora, golsFora, data)
+	SELECT timeCasa, grupoCasa, ABS(CHECKSUM(NEWID()) % 5) AS golsCasa, timeFora, grupoFora, ABS(CHECKSUM(NEWID()) % 5) AS golsFora, @rodada4 AS data FROM #temporaria 
 	WHERE codigo IN (4, 5, 11, 14);		
 
 	SET @dataSaida = DATEADD(day, 1, @rodada4);
 	DROP TABLE #temporaria;
 END
 
+------------–––––------------–––––------------–––––------------–––––------------–––––------------–––––
 ------ PROCEDURE PARA GERAR TODAS AS RODADAS
 
 DROP PROCEDURE gerarRodadas;
+
 CREATE PROCEDURE gerarRodadas AS
 BEGIN 
+	
+	DELETE jogos;
 
 	DECLARE @data AS DATE; 
 	SET @data = GETDATE();
@@ -102,27 +106,23 @@ EXEC gerarRodadas;
 
 
 --- VERIFICANDO AS DATAS 
-SELECT data FROM exemplo group by data;
+SELECT data FROM jogos group by data;
 
 -- VERIFICANDO AS RODADAS
-select * from exemplo e WHERE data = '2022-04-03';
-select * from exemplo e WHERE data = '2022-04-06';
-select * from exemplo e WHERE data = '2022-04-10';
-select * from exemplo e WHERE data = '2022-04-13';
+select * from jogos e WHERE data = '2022-04-03';
+select * from jogos e WHERE data = '2022-04-06';
+select * from jogos e WHERE data = '2022-04-10';
+select * from jogos e WHERE data = '2022-04-13';
 
-select * from exemplo e WHERE data = '2022-04-17';
-select * from exemplo e WHERE data = '2022-04-20';
-select * from exemplo e WHERE data = '2022-04-24';
-select * from exemplo e WHERE data = '2022-04-27';
+select * from jogos e WHERE data = '2022-04-17';
+select * from jogos e WHERE data = '2022-04-20';
+select * from jogos e WHERE data = '2022-04-24';
+select * from jogos e WHERE data = '2022-04-27';
 
-select * from exemplo e WHERE data = '2022-05-01';
-select * from exemplo e WHERE data = '2022-05-04';
-select * from exemplo e WHERE data = '2022-05-08';
-select * from exemplo e WHERE data = '2022-05-11';
-
-
-DELETE exemplo;
+select * from jogos e WHERE data = '2022-05-01';
+select * from jogos e WHERE data = '2022-05-04';
+select * from jogos e WHERE data = '2022-05-08';
+select * from jogos e WHERE data = '2022-05-11';
 
 
----comando para gerar os gols da partida;
- SELECT ABS(CHECKSUM(NEWID()) % 10);
+select * from jogos;
