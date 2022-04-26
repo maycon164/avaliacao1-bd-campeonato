@@ -42,7 +42,7 @@ BEGIN
 	EXEC gerarDataValida @data, @rodada1  output;
 
 	INSERT INTO jogos(timeCasa, grupoCasa, golsCasa, timeFora, grupoFora, golsFora, data)
-	SELECT timeCasa, grupoCasa, ABS(CHECKSUM(NEWID()) % 5) AS golsCasa, timeFora, grupoFora, ABS(CHECKSUM(NEWID()) % 5) AS golsFora, @rodada1 AS data FROM #temporaria 
+	SELECT codigoCasa, grupoCasa, ABS(CHECKSUM(NEWID()) % 5) AS golsCasa, codigoFora, grupoFora, ABS(CHECKSUM(NEWID()) % 5) AS golsFora, @rodada1 AS data FROM #temporaria 
 	WHERE codigo IN (1, 8, 10, 15);
 
 	DECLARE @rodada2 as date;
@@ -50,7 +50,7 @@ BEGIN
 	EXEC gerarDataValida @rodada1, @rodada2 output;
 
 	INSERT INTO jogos(timeCasa, grupoCasa, golsCasa, timeFora, grupoFora, golsFora, data)
-	SELECT timeCasa, grupoCasa, ABS(CHECKSUM(NEWID()) % 5) AS golsCasa, timeFora, grupoFora, ABS(CHECKSUM(NEWID()) % 5) AS golsFora, @rodada2 AS data FROM #temporaria 
+	SELECT codigoCasa, grupoCasa, ABS(CHECKSUM(NEWID()) % 5) AS golsCasa, codigoFora, grupoFora, ABS(CHECKSUM(NEWID()) % 5) AS golsFora, @rodada2 AS data FROM #temporaria 
 	WHERE codigo IN (2, 7, 9, 16);
 
 	DECLARE @rodada3 as date;
@@ -58,7 +58,7 @@ BEGIN
 	EXEC gerarDataValida @rodada2, @rodada3 output;
 
 	INSERT INTO jogos(timeCasa, grupoCasa, golsCasa, timeFora, grupoFora, golsFora, data)
-	SELECT timeCasa, grupoCasa, ABS(CHECKSUM(NEWID()) % 5) AS golsCasa, timeFora, grupoFora, ABS(CHECKSUM(NEWID()) % 5) AS golsFora, @rodada3 AS data FROM #temporaria 
+	SELECT codigoCasa, grupoCasa, ABS(CHECKSUM(NEWID()) % 5) AS golsCasa, codigoFora, grupoFora, ABS(CHECKSUM(NEWID()) % 5) AS golsFora, @rodada3 AS data FROM #temporaria 
 	WHERE codigo IN (3, 6, 12, 13);
 
 	DECLARE @rodada4 as date;
@@ -66,7 +66,7 @@ BEGIN
 	EXEC gerarDataValida @rodada3, @rodada4 output;
 
 	INSERT INTO jogos(timeCasa, grupoCasa, golsCasa, timeFora, grupoFora, golsFora, data)
-	SELECT timeCasa, grupoCasa, ABS(CHECKSUM(NEWID()) % 5) AS golsCasa, timeFora, grupoFora, ABS(CHECKSUM(NEWID()) % 5) AS golsFora, @rodada4 AS data FROM #temporaria 
+	SELECT codigoCasa, grupoCasa, ABS(CHECKSUM(NEWID()) % 5) AS golsCasa, codigoFora, grupoFora, ABS(CHECKSUM(NEWID()) % 5) AS golsFora, @rodada4 AS data FROM #temporaria 
 	WHERE codigo IN (4, 5, 11, 14);		
 
 	SET @dataSaida = DATEADD(day, 1, @rodada4);

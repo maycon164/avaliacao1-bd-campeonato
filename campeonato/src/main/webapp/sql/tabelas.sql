@@ -21,12 +21,14 @@ CREATE TABLE grupos(
 	FOREIGN KEY (codigoTime) REFERENCES times(codigoTime)
 )
 
+DROP TABLE jogos;
+
 CREATE TABLE jogos(
 	id int primary key identity(1, 1),
-	timeCasa VARCHAR(50),
+	timeCasa INT FOREIGN KEY REFERENCES times(codigoTime),
 	grupoCasa CHAR,
 	golsCasa INT,
-	timeFora VARCHAR(50),
+	timeFora INT FOREIGN KEY REFERENCES times(codigoTime),
 	grupoFora CHAR,
 	golsFora INT,
 	data DATE NOT NULL
