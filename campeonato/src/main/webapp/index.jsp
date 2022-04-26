@@ -54,6 +54,8 @@
 			</c:if>
 
 			<c:if test="${not empty jogos }">
+                <h1>Edite o resultado dos jogos</h1>
+
 				<table border="1px" cellpadding="5px" cellspacing="0">
 
 					<tr>
@@ -65,18 +67,30 @@
 						<th>GOLS FORA</th>
 						<th>DATA</th>
 					</tr>
+                    <form>
+                        <c:forEach var="jogo" items="${jogos }">
+                            <tr>
+                                <td>${jogo.timeCasa}</td>
+                                <td>${jogo.grupoCasa}</td>
 
-					<c:forEach var="jogo" items="${jogos }">
-						<tr>
-							<td>${jogo.timeCasa}</td>
-							<td>${jogo.grupoCasa}</td>
-							<td>${jogo.golsCasa}</td>
-							<td>${jogo.timeFora}</td>
-							<td>${jogo.grupoFora}</td>
-							<td>${jogo.golsFora}</td>
-							<td>${jogo.data}</td>
-						</tr>
-					</c:forEach>
+                                <td>
+                                   <input type="text" value=${jogo.golsCasa} />
+                                </td>
+
+                                <td>${jogo.timeFora}</td>
+                                <td>${jogo.grupoFora}</td>
+
+                                <td>
+                                    <input type="text" value=${jogo.golsFora} />
+                                </td>
+
+                                <td>${jogo.data}</td>
+                            </tr>
+                        </c:forEach>
+
+                      <input type="button" value="update resultado das partidas">
+
+                    </form>
 				</table>
 
 			</c:if>

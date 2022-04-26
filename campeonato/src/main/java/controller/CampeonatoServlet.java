@@ -29,7 +29,7 @@ public class CampeonatoServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		System.out.println("Entrou no servlet");
+
 		TorneioDao td;
 
 		String acao = request.getParameter("action");
@@ -57,7 +57,6 @@ public class CampeonatoServlet extends HttpServlet {
 			throws ServletException, IOException {
 
 		String dataRodada = request.getParameter("dataRodada");
-		System.out.println(dataRodada.getClass().getSimpleName());
 
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		Date data;
