@@ -22,6 +22,7 @@ CREATE TABLE grupos(
 )
 
 CREATE TABLE jogos(
+	id int primary key identity(1, 1),
 	timeCasa VARCHAR(50),
 	grupoCasa CHAR,
 	golsCasa INT,

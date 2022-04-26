@@ -82,6 +82,7 @@ CREATE PROCEDURE gerarRodadas AS
 BEGIN 
 	
 	DELETE jogos;
+	DBCC CHECKIDENT (jogos, RESEED, 0)
 
 	DECLARE @data AS DATE; 
 	SET @data = GETDATE();

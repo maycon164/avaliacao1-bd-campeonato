@@ -35,13 +35,14 @@ BEGIN
 		) AS tbl2
 	ON tbl1.cont = tbl2.cont;
 
-	SELECT * FROM vw_time_grupo
-	ORDER BY g.sigla;
+	SELECT * FROM vw_time_grupo;
 
 END
 
 EXEC sortearGrupos;
 
+
+------------–––––------------–––––------------–––––------------–––––------------–––––------------–––––
 -- VIEW DOS TIMES COM O SEU GRUPO
 CREATE VIEW vw_time_grupo
 AS
@@ -50,7 +51,6 @@ AS
 	AND g.sigla = gp.codigoGrupo 
 
 SELECT * FROM vw_time_grupo order by sigla;
-
 
 
 ------------–––––------------–––––------------–––––------------–––––------------–––––------------–––––
