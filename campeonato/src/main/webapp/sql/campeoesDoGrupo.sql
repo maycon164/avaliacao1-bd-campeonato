@@ -53,7 +53,6 @@ BEGIN
 			WHILE @@FETCH_STATUS = 0
 				BEGIN
 					--logica que pega incrementa as vitorias, derrotas e empates
-					SET =
 					/*
 					(SELECT COUNT(*) FROM jogos WHERE timeFora = 14 AND golsFora > golsCasa)
 					(SELECT COUNT(*) FROM jogos WHERE timeCasa = 14 AND golsCasa > golsFora)
@@ -74,23 +73,25 @@ BEGIN
 				
 					--TODO 
 					--gols marcados, gols sofridos e saldo de gols (gols marcados - gols sofridos)
-					SET @gols_marcados = (SELECT sum(golsCasa) FROM jogos WHERE timeCasa = @idTime);
-					SET @gols_marcados = @gols_marcados + (SELECT sum(golsFora) FROM jogos WHERE timeFora = 14);
+					SET @gols_marcados = ISNULL((SELECT sum(golsCasa) FROM jogos WHERE timeCasa = @idTime), 0);
+					SET @gols_marcados = @gols_marcados + ISNULL((SELECT sum(golsFora) FROM jogos WHERE timeFora = @idTime), 0);
 
-					SET @gols_sofridos = (SELECT sum(golsFora) FROM jogos WHERE timeCasa = @idTime);
-					SET @gols_sofridos = @gols_sofridos + (SELECT sum(golsCasa) FROM jogos WHERE timeFora = @idTime);
+					SET @gols_sofridos = ISNULL((SELECT sum(golsFora) FROM jogos WHERE timeCasa = @idTime), 0);
+					SET @gols_sofridos = @gols_sofridos + ISNULL((SELECT sum(golsCasa) FROM jogos WHERE timeFora = @idTime), 0);
 				
 					SET @saldo_gols = (@gols_marcados - @gols_sofridos);
 				
 					--TODO 
-					-- calculo dos pontos	
+					-- calculo dos pontos
+					--(Vitória = 3 pontos, Empate = 1 ponto , Derrota = 0 pontos)
+					SET @pontos = (@vitorias * 3) + (@empates)
 				
 					--buscar o nome do time 
 					SET @nome_time = (SELECT nome from times where codigoTime = @idTime)
 					
 					--INSERIR NA TABELA
 					INSERT INTO @tabela VALUES
-					(@nome_time, 12, @vitorias, @empates, @derrotas, @gols_marcados, @gols_sofridos, @saldo_gols, 0);
+					(@nome_time, 12, @vitorias, @empates, @derrotas, @gols_marcados, @gols_sofridos, @saldo_gols, @pontos);
 					
 					FETCH NEXT FROM c_percorre_grupo into @idTime
 					
@@ -104,6 +105,7 @@ BEGIN
 
 END
 
-SELECT * from  classificar_grupo('B')
+SELECT * FROM grupos
+SELECT * from  classificar_grupo('D')
 
 	
