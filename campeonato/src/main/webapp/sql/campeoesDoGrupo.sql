@@ -53,13 +53,14 @@ BEGIN
 			WHILE @@FETCH_STATUS = 0
 				BEGIN
 					--logica que pega incrementa as vitorias, derrotas e empates
-					
+					SET =
 					/*
 					(SELECT COUNT(*) FROM jogos WHERE timeFora = 14 AND golsFora > golsCasa)
 					(SELECT COUNT(*) FROM jogos WHERE timeCasa = 14 AND golsCasa > golsFora)
 					6 VITORIAS
 					
-					SELECT * FROM jogos WHERE timeCasa = 14 OR timeFora = 14
+					SELECT * FROM jogos WHERE timeCasa = 14 OR timeFora = 14 // 11 gols sofridos
+					SELECT * FROM jogos WHERE timeFora = 14
 					
 					SELECT count (*) FROM jogos WHERE golsCasa = golsFora AND (timeCasa = 14 OR timeFora = 14)
 					4 EMPATES
@@ -72,14 +73,24 @@ BEGIN
 					SET @derrotas = 12 - (@vitorias + @empates);
 				
 					--TODO 
-					--calcula os pontos, gols marcados, gols sofridos e saldo de gols (gols marcados - gols sofridos)
+					--gols marcados, gols sofridos e saldo de gols (gols marcados - gols sofridos)
+					SET @gols_marcados = (SELECT sum(golsCasa) FROM jogos WHERE timeCasa = @idTime);
+					SET @gols_marcados = @gols_marcados + (SELECT sum(golsFora) FROM jogos WHERE timeFora = 14);
 
+					SET @gols_sofridos = (SELECT sum(golsFora) FROM jogos WHERE timeCasa = @idTime);
+					SET @gols_sofridos = @gols_sofridos + (SELECT sum(golsCasa) FROM jogos WHERE timeFora = @idTime);
+				
+					SET @saldo_gols = (@gols_marcados - @gols_sofridos);
+				
+					--TODO 
+					-- calculo dos pontos	
+				
 					--buscar o nome do time 
 					SET @nome_time = (SELECT nome from times where codigoTime = @idTime)
 					
 					--INSERIR NA TABELA
 					INSERT INTO @tabela VALUES
-					(@nome_time, 12, @vitorias, @empates, @derrotas, 0, 0, 0, 0);
+					(@nome_time, 12, @vitorias, @empates, @derrotas, @gols_marcados, @gols_sofridos, @saldo_gols, 0);
 					
 					FETCH NEXT FROM c_percorre_grupo into @idTime
 					
