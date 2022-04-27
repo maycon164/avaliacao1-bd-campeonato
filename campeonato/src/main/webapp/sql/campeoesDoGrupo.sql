@@ -33,7 +33,7 @@ BEGIN
 			@gols_sofridos			INT,
 			@saldo_gols				INT,
 			@pontos					INT;
-			
+		
 	
 	--jogos disputados será sempre 12???
 
@@ -52,27 +52,47 @@ BEGIN
 			
 			WHILE @@FETCH_STATUS = 0
 				BEGIN
-					
-					--TODO cursor para percorrer todos os jogos de um ID especifico
-					--SELECT * FROM jogos WHERE timeCasa = 14
-					--union
-					--SELECT * FROM jogos WHERE timeFora = 14
 					--logica que pega incrementa as vitorias, derrotas e empates
-					--calcula os pontos, gols marcados, gols sofridos e saldo de gols (gols marcados - gols sofridos)
+					
+					/*
+					(SELECT COUNT(*) FROM jogos WHERE timeFora = 14 AND golsFora > golsCasa)
+					(SELECT COUNT(*) FROM jogos WHERE timeCasa = 14 AND golsCasa > golsFora)
+					6 VITORIAS
+					
+					SELECT * FROM jogos WHERE timeCasa = 14 OR timeFora = 14
+					
+					SELECT count (*) FROM jogos WHERE golsCasa = golsFora AND (timeCasa = 14 OR timeFora = 14)
+					4 EMPATES
+					*/
+					
+					SET @vitorias = (SELECT COUNT(*) FROM jogos WHERE timeCasa = @idTime AND golsCasa > golsFora);
+					SET @vitorias = @vitorias + (SELECT COUNT(*) FROM jogos WHERE timeFora = @idTime AND golsFora > golsCasa);
+					SET @empates = (SELECT count (*) FROM jogos WHERE golsCasa = golsFora AND (timeCasa = @idTime OR timeFora = @idTime));
+					
+					SET @derrotas = 12 - (@vitorias + @empates);
 				
-									
+					--TODO 
+					--calcula os pontos, gols marcados, gols sofridos e saldo de gols (gols marcados - gols sofridos)
+
+					--buscar o nome do time 
+					SET @nome_time = (SELECT nome from times where codigoTime = @idTime)
+					
+					--INSERIR NA TABELA
+					INSERT INTO @tabela VALUES
+					(@nome_time, 12, @vitorias, @empates, @derrotas, 0, 0, 0, 0);
+					
 					FETCH NEXT FROM c_percorre_grupo into @idTime
+					
 				END
+			
 		END
 	CLOSE c_percorre_grupo
 	DEALLOCATE c_percorre_grupo
-	
 	
 	RETURN
 
 END
 
-SELECT * from  classificar_grupo('D')
- 
+SELECT * from  classificar_grupo('B')
 
-		
+	
