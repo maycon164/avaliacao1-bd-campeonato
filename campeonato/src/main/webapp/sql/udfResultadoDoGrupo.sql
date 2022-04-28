@@ -8,11 +8,12 @@ O campeão de cada grupo se dará por aquele que tiver maior número de pontos. 
 depois por gols marcados e por fim, por saldo de gols.
 (Vitória = 3 pontos, Empate = 1 ponto , Derrota = 0 pontos)
 
-CREATE FUNCTION classificar_grupo(
+CREATE FUNCTION resultado_grupo(
 	@grupo VARCHAR(1)
 )
 RETURNS @tabela TABLE (
 	nome_time				VARCHAR(100),
+	id_time					INT,
 	jogos_disputados		INT,
 	vitorias				INT,
 	empates					INT, 
@@ -91,7 +92,7 @@ BEGIN
 					
 					--INSERIR NA TABELA
 					INSERT INTO @tabela VALUES
-					(@nome_time, 12, @vitorias, @empates, @derrotas, @gols_marcados, @gols_sofridos, @saldo_gols, @pontos);
+					(@nome_time,@idTime, 12, @vitorias, @empates, @derrotas, @gols_marcados, @gols_sofridos, @saldo_gols, @pontos);
 					
 					FETCH NEXT FROM c_percorre_grupo into @idTime
 					
@@ -100,12 +101,13 @@ BEGIN
 		END
 	CLOSE c_percorre_grupo
 	DEALLOCATE c_percorre_grupo
-	
 	RETURN
-
 END
 
-SELECT * FROM grupos
-SELECT * from  classificar_grupo('D')
+
+
+
+SELECT * FROM grupos WHERE codigoGrupo 
+SELECT * from  resultado_grupo('C')
 
 	
